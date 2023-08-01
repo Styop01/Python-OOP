@@ -44,8 +44,8 @@ class Cars:
 
 class Sedan(Cars):  # (Cars) means that Sedan takes all arguments from Cars
     def __init__(self, name: str, color: str, wheel_size: int):
-        super().__init__(name, color)
         self.wheel_size = wheel_size
+        super().__init__(name, color)
 
     def present(self):
         return print(f"This is {self.name} color is {self.color} and wheel size is {self.wheel_size} ")
@@ -70,7 +70,7 @@ class Sedan(Cars):
         pass
 
 
-sedan3 = Sedan(18, "mercedes","blue")
+sedan3 = Sedan(18, "mercedes", "blue")
 
 # So what is the difference.By using super() we say bring parent classes __init__ function, by using
 # Cars.__init__ we say bring Cars classes __init__ function
@@ -169,7 +169,7 @@ class Work:
 
 
 class Study:
-    def __init__(self, uni: str, course: int, company, salary):
+    def __init__(self, uni: str, course: int, company: str, salary: int):
         self.uni = uni
         self.course = course
         super().__init__(company, salary)
@@ -184,3 +184,134 @@ class Person(Study, Work):
 person2 = Person("098222429", "YSU", 4, "Google", 1500)
 # Here we are saying that Person inherits from Study, Study inherits from Work
 # ----------------------------------------------------------------------------------------------------------------------
+#
+#
+#
+#
+# ----------------------------------------------- OPTIMIZING CODE ------------------------------------------------------
+
+# __________________________________________________________________________________
+# At first lets understand how *args, **kwargs work                                 |
+#                                                                                   |
+#                                                                                   |
+# def foo(*args, **kwargs):                                                         |
+#     print(*args)              ----> 1, 2, 3, 4                                    |
+#     print(args, kwargs)       ----> (1, 2, 3, 4) {'a': 'hello', 'b': 'world'}     |
+#                                                                                   |
+#                                                                                   |
+# foo(1, 2, 3, 4, a='hello', b='world')                                             |
+#                                                                                   |
+# Here we have function which takes *args and **kwargs which means that it takes    |
+# unlimited arguments which can be also key value arguments.The arguments are stored|
+# for *args in tuple and for **kwargs in dictionary.                                |
+#                                                                                   |
+# print(*args) the output of this is 1, 2, 3, 4 because '*' is unpacking tuple so   |
+# the output of print(args) will be (1, 2, 3, 4)                                    |
+#                                                                                   |
+# print(kwargs) the output of this is dictionary {'a': 'hello', 'b': 'world'}, but  |
+# here print(**kwargs) we would have an error, because we cant unpack dictionary,   |
+# because unpacking dictionary would mean this print(a="hello", b="world"), as      |
+# we can see print() function has given wrong attributes.                           |
+#                                                                                   |
+# -----------------------------------------------------------------------------------
+#
+#
+# ______________________________________________________________________________________________________________________
+# --------------------------------------------- MULTIPLE INHERITANCE ---------------------------------------------------
+
+
+class Work:
+    def __init__(self, company: str, salary: int):
+        self.company = company
+        self.salary = salary
+
+
+class Study:
+    def __init__(self, uni: str, course: int, *args, **kwargs):
+        self.uni = uni
+        self.course = course
+        super().__init__(*args, **kwargs)
+
+
+class Person(Study, Work):
+    def __init__(self, phone: str, *args, **kwargs):
+        self.phone = phone
+        super().__init__(*args, **kwargs)
+
+
+person3 = Person("098222429", "YSU", 4, "Google", 1500)
+
+# As we can see our code became shorter and optimized due to *args and **kwargs.Now we can give to each class their own
+# arguments and rest arguments by using *args and **kwargs, so don't pay attention what arguments parent class takes.
+
+
+# ______________________________________________________________________________________________________________________
+# -------------------------------------------- HIERARCHICAL INHERITANCE ------------------------------------------------
+
+
+class Person:
+    def __init__(self, phone: str):
+        self.phone = phone
+
+
+class Work(Person):
+    def __init__(self, company: str, salary: int, *args, **kwargs):
+        self.company = company
+        self.salary = salary
+        super().__init__(*args, **kwargs)
+
+
+class Study(Person):
+    def __init__(self, uni: str, course: int, *args, **kwargs):
+        self.uni = uni
+        self.course = course
+        super().__init__(*args, **kwargs)
+
+
+person4 = Work("Google", 1500, "098222429")
+person5 = Study("YSU", 4, "098222429")
+
+#
+# ______________________________________________________________________________________________________________________
+# ---------------------------------------------- MULTILEVEL INHERITANCE ------------------------------------------------
+
+
+class Person:
+    def __init__(self, phone: str):
+        self.phone = phone
+
+
+class Work(Person):
+    def __init__(self, company: str, salary: int, *args, **kwargs):
+        self.company = company
+        self.salary = salary
+        super().__init__(*args, **kwargs)
+
+
+class Study(Work):
+    def __init__(self, uni: str, course: int, *args, **kwargs):
+        self.uni = uni
+        self.course = course
+        super().__init__(*args, **kwargs)
+
+
+person6 = Study("YSU", 4, "Google", 1500, "098222429")
+
+
+# ______________________________________________________________________________________________________________________
+# ----------------------------------------------- SINGLE INHERITANCE ---------------------------------------------------
+
+
+class Person:
+    def __init__(self, phone: str):
+        self.phone = phone
+
+
+class Work(Person):
+    def __init__(self, company: str, salary: int, *args, **kwargs):
+        self.company = company
+        self.salary = salary
+        super().__init__(*args, **kwargs)
+
+
+person7 = Work("Google", 1500, "098222429")
